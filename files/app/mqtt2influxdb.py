@@ -138,8 +138,6 @@ def _parse_message(topic, payload):
         LOG.debug('encountered undecodable payload: "%s"', payload)
         return None
 
-    LOG.debug(type(dict))
-
     if  isinstance(payload, dict):
         LOG.debug("dict")
         payloadlist = _parse_dict(topic, payload)
