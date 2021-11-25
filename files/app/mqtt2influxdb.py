@@ -107,20 +107,20 @@ def on_message(mosq, userdata, msg):
 def _parse_dict(topic, payload):
     payloadlist = {}
     if  isinstance(payload, dict):
-        for metric, value in payload.items():
-            
-            LOG.info( value )
+        for metric, value in payload.items():            
             if isinstance(value, dict):
                 LOG.debug("parsing dict %s: %s", metric, value)
                 data = _parse_dict(f"{topic}_{metric}", value)            
                 for metric_, value_ in data.items():
                     try:
-                        payloadlist.add(metric_, _parse_metric(value_))
+                        payloadlist[metric_] = _parse_metric(value_)
                     except:
                         pass
+            else:
+                payloadlist[topic + "_" + metric] = _parse_metric(value)
     else:
         try:
-            payloadlist.add(topic, _parse_metric(payload))
+            payloadlist[topic]  = _parse_metric(payload)
         except:
             pass
 
