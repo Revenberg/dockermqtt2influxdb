@@ -87,7 +87,7 @@ def on_message(mosq, userdata, msg):
     json_body = {'points': [{
                             'fields': payload
                                     }],
-                        'measurement': 'test'
+                        'measurement': 'p1'
                         }
 
  #   client = InfluxDBClient(host=influx_server,
