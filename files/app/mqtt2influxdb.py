@@ -84,6 +84,8 @@ def on_message(mosq, userdata, msg):
     if not payload:
         return
 
+    LOG.debug('payload')
+
     json_body = {'points': [{
                             'fields': {k: v for k, v in payload.items()}
                                     }],
@@ -123,6 +125,8 @@ def _parse_dict(topic, payload):
     return payloadlist
 
 def _parse_message(topic, payload):
+    LOG.debug(payload)
+
     topic = topic.replace("/", ".").replace(" ", ".")
     # parse MQTT topic and payload
     try:
@@ -144,6 +148,8 @@ def _parse_message(topic, payload):
             info[-1]: _parse_metric(payload)
         }
 
+    LOG.debug("return")
+    LOG.debug(payload)
     return topic, payloadlist
 
 def _parse_metric(data):
@@ -169,26 +175,6 @@ def _parse_metric(data):
 
     # We were not able to extract anything, let's bubble it up.
     raise ValueError(f"Can't parse '{data}' to a number.")
-
-def _parse_metrics(data, topic, prefix=""):
-    """Attempt to parse a set of metrics.
-
-    Note when `data` contains nested metrics this function will be called recursivley.
-    """
-    now = int(time.time())
-    LOG.info( data )
-
-    for metric, value in data.items():
-        # when value is a dict recursivley call _parse_metrics to handle these messages
-        LOG.info( value )
-        
-        try:
-            metric_value = _parse_metric(value)
-        except ValueError as err:
-            LOG.debug("Failed to convert %s: %s", metric, err)
-            continue
-        
-        LOG.debug("new value for %s: %s", metric, metric_value)
 
 def on_subscribe(mosq, userdata, mid, granted_qos):
     pass
