@@ -208,9 +208,14 @@ def _init_influxdb_database(influxdb_client):
     if len(list(filter(lambda x: x['name'] == INFLUXDB_DATABASE, databases))) == 0:
         logging.debug('Creating database %s' % INFLUXDB_DATABASE)
         influxdb_client.create_database(INFLUXDB_DATABASE)
-        influxdb_client.create_retention_policy('10_days', '10d', 1, INFLUXDB_DATABASE, default=True)
-        influxdb_client.create_retention_policy('60_days', '60d', 1, INFLUXDB_DATABASE, default=False)
-        influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
+
+    logging.debug('create_retention_policy 1')
+    influxdb_client.create_retention_policy('10_days', '10d', 1, INFLUXDB_DATABASE, default=True)
+    logging.debug('create_retention_policy 2')
+    influxdb_client.create_retention_policy('60_days', '60d', 1, INFLUXDB_DATABASE, default=False)
+    logging.debug('create_retention_policy 3')
+    influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
+    logging.debug('create_retention_policy 4')
     logging.debug('Switch database %s' % INFLUXDB_DATABASE)
     
     influxdb_client.switch_database(INFLUXDB_DATABASE)
