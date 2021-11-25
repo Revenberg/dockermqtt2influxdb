@@ -130,7 +130,7 @@ def _parse_message(topic, payload):
     topic = topic.replace("/", ".").replace(" ", ".")
     # parse MQTT topic and payload
     try:
-        payload = json.loads(payload)
+        payload = json.loads(payload)        
     except json.JSONDecodeError:
         LOG.debug('failed to parse as JSON: "%s"', payload)
         return None, None
@@ -139,17 +139,20 @@ def _parse_message(topic, payload):
         return None, None
 
     if  isinstance(payload, dict):
+        LOG.debug("dict")
         payloadlist = _parse_dict(topic, payload)
 
     # handle payload having single values and
     if not isinstance(payload, dict):
+        LOG.debug("non dict")
         info = topic.split("/")
         payloadlist = {
             info[-1]: _parse_metric(payload)
         }
 
     LOG.debug("return")
-    LOG.debug(payload)
+    LOG.debug(topic)
+    LOG.debug(payloadlist)
     return topic, payloadlist
 
 def _parse_metric(data):
