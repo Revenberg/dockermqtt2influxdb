@@ -133,10 +133,10 @@ def _parse_message(topic, payload):
         payload = json.loads(payload)        
     except json.JSONDecodeError:
         LOG.debug('failed to parse as JSON: "%s"', payload)
-        return None, None
+        return None
     except UnicodeDecodeError:
         LOG.debug('encountered undecodable payload: "%s"', payload)
-        return None, None
+        return None
 
     if  isinstance(payload, dict):
         LOG.debug("dict")
