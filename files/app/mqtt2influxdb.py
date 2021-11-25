@@ -87,7 +87,7 @@ def on_message(mosq, userdata, msg):
     LOG.debug('payload')
 
     json_body = {'points': [{
-                            'fields': {k: v for k, v in payload.items()}
+                            'fields': {k: v for k, v in payload}
                                     }],
                         'measurement': 'test'
                         }
@@ -145,9 +145,8 @@ def _parse_message(topic, payload):
     # handle payload having single values and
     if not isinstance(payload, dict):
         LOG.debug("non dict")
-        info = topic.split(".")
         payloadlist = {
-            info[-1]: _parse_metric(payload)
+            topic: _parse_metric(payload)
         }
         LOG.debug(payloadlist)
 
