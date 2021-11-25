@@ -8,6 +8,6 @@ services:
     environment:
       - LOG_LEVEL=DEBUG
       - MQTT_ADDRESS=192.168.2.71
-      - MQTT_TOPIC=reading/p1/#
+      - MQTT_TOPIC=reading/#
       - INFLUXDB_ADDRESS=192.168.2.71
       - INFLUXDB_PORT=8086
