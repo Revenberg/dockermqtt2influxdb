@@ -52,7 +52,6 @@ def cleanup(signum, frame):
     logging.info("Disconnected from broker; exiting on signal %d", signum)
     sys.exit(signum)
 
-
 def is_number(s):
     '''Test whether string contains a number (leading/traling white-space is ok)'''
 
@@ -61,7 +60,6 @@ def is_number(s):
         return True
     except ValueError:
         return False
-
 
 def subscribe(client, userdata, flags, connection_result):  # pylint: disable=W0613
     """Subscribe to mqtt events (callback)."""
@@ -205,12 +203,15 @@ def on_disconnect(mosq, userdata, rc):
 def _init_influxdb_database(influxdb_client):
     databases = influxdb_client.get_list_database()
     if len(list(filter(lambda x: x['name'] == INFLUXDB_DATABASE, databases))) == 0:
-        print('Creating database ' + INFLUXDB_DATABASE)
+        logging.debug('Creating database %s' % INFLUXDB_DATABASE)
         influxdb_client.create_database(INFLUXDB_DATABASE)
         influxdb_client.create_retention_policy('10_days', '10d', 1, INFLUXDB_DATABASE, default=True)
         influxdb_client.create_retention_policy('60_days', '60d', 1, INFLUXDB_DATABASE, default=False)
         influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
+    logging.debug('Switch database %s' % INFLUXDB_DATABASE)
+    
     influxdb_client.switch_database(INFLUXDB_DATABASE)
+    logging.debug('Connected to database %s' % INFLUXDB_DATABASE)
 
 def main():
     logging.info("Starting %s" % client_id)
@@ -226,7 +227,7 @@ def main():
         sys.stderr.write("Can't create influx connection\n")
         sys.exit(1)
         
-    print('Connecting to the database ' + INFLUXDB_DATABASE)
+    logging.debug('Connecting to the database %s' % INFLUXDB_DATABASE)
     _init_influxdb_database(influxdb_client)
 
     global client
