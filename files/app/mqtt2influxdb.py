@@ -230,8 +230,10 @@ def main():
     logging.debug('Connecting to the database %s' % INFLUXDB_DATABASE)
     _init_influxdb_database(influxdb_client)
 
+    logging.debug('mqtt.Client()')
     global client
     client = mqtt.Client()
+    logging.debug('stop_request')
 
     def stop_request(signum, frame):
         """Stop handler for SIGTERM and SIGINT.
