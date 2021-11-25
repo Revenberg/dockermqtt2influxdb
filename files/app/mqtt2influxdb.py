@@ -95,6 +95,9 @@ def on_message(mosq, userdata, msg):
  #   client = InfluxDBClient(host=influx_server,
  #                           port=influx_port)
     global influxdb_client
+    
+    LOG.debug(json_body)
+    
     success = influxdb_client.write(json_body,
                         # params isneeded, otherwise error 'database is required' happens
                         params={'db': INFLUXDB_DATABASE})
