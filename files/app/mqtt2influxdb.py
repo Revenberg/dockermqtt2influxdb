@@ -228,7 +228,7 @@ def main():
         
     logging.debug(influxdb_client)        
     logging.debug('Connecting to the database %s' % INFLUXDB_DATABASE)
-    _init_influxdb_database(influxdb_client)
+    _init_influxdb_database()
 
     logging.debug('mqtt.Client()')
     global client
