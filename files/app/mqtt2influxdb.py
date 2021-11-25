@@ -244,17 +244,22 @@ def main():
         client.disconnect()
         sys.exit(0)
 
+    logging.debug('stop_request')
+    
     signal.signal(signal.SIGTERM, stop_request)
     signal.signal(signal.SIGINT, stop_request)
 
+    logging.debug('on_message')
     client.on_message = on_message
-    client.on_connect = subscribe
+    logging.debug('subscribe')
+    client.on_connect = subscribe    
 #    client.on_disconnect = on_disconnect
 #    client.on_subscribe = on_subscribe
 
 #    client.will_set("clients/" + client_id, payload="Adios!", qos=0, retain=False)
 
     # start the connection and the loop
+    logging.debug('MQTT_USERNAME')
     if MQTT_USERNAME and MQTT_PASSWORD:
         client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
     LOG.info("MQTT: %s %s %s", MQTT_ADDRESS, MQTT_PORT, MQTT_KEEPALIVE)
