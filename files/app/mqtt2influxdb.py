@@ -145,10 +145,11 @@ def _parse_message(topic, payload):
     # handle payload having single values and
     if not isinstance(payload, dict):
         LOG.debug("non dict")
-        info = topic.split("/")
+        info = topic.split(".")
         payloadlist = {
             info[-1]: _parse_metric(payload)
         }
+        LOG.debug(payloadlist)
 
     LOG.debug("return")
     LOG.debug(topic)
