@@ -84,8 +84,6 @@ def on_message(mosq, userdata, msg):
     if not payload:
         return
 
-    LOG.debug(payload)
-
     json_body = {'points': [{
                             'fields': payload
                                     }],
@@ -97,8 +95,7 @@ def on_message(mosq, userdata, msg):
     global influxdb_client
     
     LOG.debug(json_body)
-    LOG.debug(INFLUXDB_DATABASE)
-
+    
     success = influxdb_client.write(json_body,
                         # params isneeded, otherwise error 'database is required' happens
                         params={'db': INFLUXDB_DATABASE})

@@ -23,6 +23,7 @@ if [ $ex == true ]; then
 
     docker push revenberg/mqtt2influxdb:latest
 
+    sudo truncate -s 0 $(docker inspect --format='{{.LogPath}}' mqtt2influxdb)
     # testing: 
 
     echo "==========================================================="
