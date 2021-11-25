@@ -22,7 +22,7 @@ MQTT_KEEPALIVE = int(os.getenv("MQTT_KEEPALIVE", "60"))
 MQTT_USERNAME = os.getenv("MQTT_USERNAME")
 MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 
-INFLUXDB_ADDRESS = os.getenv('INFLUX_SERVER', '127.0.0.1')
+INFLUXDB_ADDRESS = os.getenv('INFLUXDB_ADDRESS', '127.0.0.1')
 INFLUXDB_PORT = int(os.getenv('INFLUX_PORT', 2003))
 INFLUXDB_USER = os.getenv("INFLUXDB_USERNAME")
 INFLUXDB_PASSWORD = os.getenv("INFLUXDB_PASSWORD")
@@ -34,6 +34,7 @@ logging.basicConfig(level=LOG_LEVEL, format=LOGFORMAT)
 LOG = logging.getLogger("mqtt2influxdb")
 
 LOG.debug('MQTT_ADDRESS %s', MQTT_ADDRESS)
+LOG.debug('INFLUXDB_ADDRESS %s', MQTT_ADDRESS)
 
 STATE_VALUES = {
     "ON": 1,
