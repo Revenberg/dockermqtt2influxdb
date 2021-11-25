@@ -94,8 +94,8 @@ def on_message(mosq, userdata, msg):
 
  #   client = InfluxDBClient(host=influx_server,
  #                           port=influx_port)
-
-    success = client.write(json_body,
+    global influxdb_client
+    success = influxdb_client.write(json_body,
                         # params isneeded, otherwise error 'database is required' happens
                         params={'db': INFLUXDB_DATABASE})
 
@@ -187,7 +187,8 @@ def on_disconnect(mosq, userdata, rc):
         logging.info("Unexpected disconnect (rc %s); reconnecting in 5 seconds" % rc)
         time.sleep(5)
 
-def _init_influxdb_database(influxdb_client):
+def _init_influxdb_database():
+    global influxdb_client
     logging.debug('influxdb_client.get_list_database')
     databases = influxdb_client.get_list_database()
     logging.debug(databases)
@@ -213,6 +214,7 @@ def main():
     logging.info("INFO MODE")
     logging.debug("DEBUG MODE")
     
+    global influxdb_client
     try:
         if INFLUXDB_USER and INFLUXDB_PASSWORD:
             logging.debug('InfluxDBClient 1')        
