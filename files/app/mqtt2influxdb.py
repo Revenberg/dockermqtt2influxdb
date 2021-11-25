@@ -129,8 +129,6 @@ def _parse_dict(topic, payload):
     return payloadlist
 
 def _parse_message(topic, payload):
-    LOG.debug(payload)
-
     topic = topic.replace("/", ".").replace(" ", ".")
     # parse MQTT topic and payload
     try:
@@ -148,13 +146,9 @@ def _parse_message(topic, payload):
 
     # handle payload having single values and
     if not isinstance(payload, dict):
-        LOG.debug("non dict")
+        LOG.debug("non dict")        
         payloadlist = { topic: _parse_metric(payload) }
-        LOG.debug(payloadlist)
-
-    LOG.debug("return")
-    LOG.debug(topic)
-    LOG.debug(payloadlist)
+    
     return payloadlist
 
 def _parse_metric(data):
