@@ -84,10 +84,10 @@ def on_message(mosq, userdata, msg):
     if not payload:
         return
 
-    LOG.debug('payload')
+    LOG.debug(payload)
 
     json_body = {'points': [{
-                            'fields': {k: v for k, v in payload}
+                            'fields': {k: v for k, v in payload.items()}
                                     }],
                         'measurement': 'test'
                         }
@@ -103,7 +103,7 @@ def on_message(mosq, userdata, msg):
         print('error writing to database')
 
 def _parse_dict(topic, payload):
-    payloadlist = {}
+    payloadlist = []
     if  isinstance(payload, dict):
         for metric, value in payload.items():
             
