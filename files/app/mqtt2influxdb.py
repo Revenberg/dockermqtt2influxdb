@@ -94,6 +94,7 @@ def on_message(mosq, userdata, msg):
  #                           port=influx_port)
     global influxdb_client
     
+    LOG.debug("===================================================")
     LOG.debug(json_body)
     
     success = influxdb_client.write(json_body,
