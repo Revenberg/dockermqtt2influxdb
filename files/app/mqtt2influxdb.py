@@ -87,7 +87,7 @@ def on_message(mosq, userdata, msg):
     LOG.debug(payload)
 
     json_body = {'points': [{
-                            'fields': {k: v for k, v in payload}
+                            'fields': payload
                                     }],
                         'measurement': 'test'
                         }
