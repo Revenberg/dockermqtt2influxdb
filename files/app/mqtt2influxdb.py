@@ -178,7 +178,8 @@ def _parse_metric(data):
         return float(data)
 
     # We were not able to extract anything, let's bubble it up.
-    raise ValueError(f"Can't parse '{data}' to a number.")
+    LOG.debug(f"Can't parse '{data}' to a number.")
+    return None
 
 def on_subscribe(mosq, userdata, mid, granted_qos):
     pass
