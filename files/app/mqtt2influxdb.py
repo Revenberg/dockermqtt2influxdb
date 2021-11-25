@@ -145,13 +145,13 @@ def _parse_message(topic, payload):
     # handle payload having single values and
     if not isinstance(payload, dict):
         LOG.debug("non dict")
-        payloadlist = _parse_metric(payload)        
+        payloadlist = { topic: _parse_metric(payload) }
         LOG.debug(payloadlist)
 
     LOG.debug("return")
     LOG.debug(topic)
     LOG.debug(payloadlist)
-    return topic, payloadlist
+    return payloadlist
 
 def _parse_metric(data):
     """Attempt to parse the value and extract a number out of it.
