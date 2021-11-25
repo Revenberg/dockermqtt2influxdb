@@ -204,7 +204,7 @@ def _init_influxdb_database(influxdb_client):
     logging.debug('influxdb_client.get_list_database')
     databases = influxdb_client.get_list_database()
     logging.debug(databases)
-    
+
     if len(list(filter(lambda x: x['name'] == INFLUXDB_DATABASE, databases))) == 0:
         logging.debug('Creating database %s' % INFLUXDB_DATABASE)
         influxdb_client.create_database(INFLUXDB_DATABASE)
@@ -223,13 +223,16 @@ def main():
     
     try:
         if INFLUXDB_USER and INFLUXDB_PASSWORD:
+            logging.debug('InfluxDBClient 1')        
             influxdb_client = InfluxDBClient(INFLUXDB_ADDRESS, INFLUXDB_PORT, INFLUXDB_USER, INFLUXDB_PASSWORD, None)
         else:
+            logging.debug('InfluxDBClient 2')        
             influxdb_client = InfluxDBClient(INFLUXDB_ADDRESS, INFLUXDB_PORT)
     except:
         sys.stderr.write("Can't create influx connection\n")
         sys.exit(1)
         
+    logging.debug(influxdb_client)        
     logging.debug('Connecting to the database %s' % INFLUXDB_DATABASE)
     _init_influxdb_database(influxdb_client)
 
