@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  mqtt2influxdb:
+    image: revenberg/mqtt2influxdb:latest
+    container_name: mqtt2influxdb
+    restart: always
+    environment:
+      - LOG_LEVEL=DEBUG
+      - MQTT_ADDRESS=192.168.2.71
+      - MQTT_TOPIC=#
+      - INFLUXDB_SERVER=192.168.2.71
+      - INFLUXDB_PORT=2003
