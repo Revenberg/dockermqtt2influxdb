@@ -201,7 +201,10 @@ def on_disconnect(mosq, userdata, rc):
         time.sleep(5)
 
 def _init_influxdb_database(influxdb_client):
+    logging.debug('influxdb_client.get_list_database')
     databases = influxdb_client.get_list_database()
+    logging.debug(databases)
+    
     if len(list(filter(lambda x: x['name'] == INFLUXDB_DATABASE, databases))) == 0:
         logging.debug('Creating database %s' % INFLUXDB_DATABASE)
         influxdb_client.create_database(INFLUXDB_DATABASE)
