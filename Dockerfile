@@ -9,6 +9,5 @@ RUN pip install -r requirements.txt
 
 
 COPY files/app* /app/
-COPY config/* /app/
 
 CMD python ./mqtt2influxdb.py
