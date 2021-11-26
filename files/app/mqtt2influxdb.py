@@ -12,7 +12,7 @@ import time
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
 
-LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "WARN")
 MQTT_ADDRESS = os.getenv("MQTT_ADDRESS", "127.0.0.1")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
 TOPIC = os.getenv("MQTT_TOPIC", "#")
@@ -27,6 +27,7 @@ INFLUXDB_PORT = int(os.getenv('INFLUX_PORT', "8086"))
 INFLUXDB_USER = os.getenv("INFLUXDB_USERNAME")
 INFLUXDB_PASSWORD = os.getenv("INFLUXDB_PASSWORD")
 INFLUXDB_DATABASE = os.getenv("INFLUXDB_DATABASE", 'mqtt')
+INFLUXDB_TABEL = os.getenv("INFLUXDB_DATABASE", 'reading')
 
 LOGFORMAT = '%(asctime)-15s %(message)s'
 
@@ -87,15 +88,12 @@ def on_message(mosq, userdata, msg):
     json_body = {'points': [{
                             'fields': payload
                                     }],
-                        'measurement': 'p1'
+                        'measurement': INFLUXDB_TABEL
                         }
 
  #   client = InfluxDBClient(host=influx_server,
  #                           port=influx_port)
     global influxdb_client
-    
-    LOG.debug("===================================================")
-    LOG.debug(json_body)
     
     success = influxdb_client.write(json_body,
                         # params isneeded, otherwise error 'database is required' happens
@@ -197,15 +195,13 @@ def _init_influxdb_database():
         logging.debug('Creating database %s' % INFLUXDB_DATABASE)
         influxdb_client.create_database(INFLUXDB_DATABASE)
 
-    logging.debug('create_retention_policy 1')
     influxdb_client.create_retention_policy('10_days', '10d', 1, INFLUXDB_DATABASE, default=True)
-    logging.debug('create_retention_policy 2')
-    influxdb_client.create_retention_policy('60_days', '60d', 1, INFLUXDB_DATABASE, default=False)
-    logging.debug('create_retention_policy 3')
     influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
-    logging.debug('create_retention_policy 4')
-    logging.debug('Switch database %s' % INFLUXDB_DATABASE)
     
+    select_clause = 'SELECT mean(*) INTO "mqtt"."infinite" FROM "mqtt"."10_days" GROUP BY time(1m)'
+
+    influxdb_client.create_continuous_query('mqtt_infinite', select_clause, INFLUXDB_DATABASE, 'EVERY 10s FOR 2m')
+
     influxdb_client.switch_database(INFLUXDB_DATABASE)
     logging.debug('Connected to database %s' % INFLUXDB_DATABASE)
 
