@@ -199,9 +199,11 @@ def _init_influxdb_database():
     influxdb_client.create_retention_policy('30_days', '30d', 1, INFLUXDB_DATABASE, default=True)
     influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
     
+    influxdb_client.drop_continuous_query("mqtt_30_days","mqtt")
     select_clause = 'SELECT mean(*) INTO "mqtt.30_days" FROM "mqtt.10_days" GROUP BY time(5m)'
     influxdb_client.create_continuous_query('mqtt_30_days', select_clause, INFLUXDB_DATABASE, 'EVERY 10s FOR 2m')
 
+    influxdb_client.drop_continuous_query("mqtt_infinite","mqtt")
     select_clause = 'SELECT mean(*) INTO "mqtt.infinite" FROM "mqtt.10_days" GROUP BY time(60m)'
     influxdb_client.create_continuous_query('mqtt_infinite', select_clause, INFLUXDB_DATABASE, 'EVERY 360s FOR 10m')
 
