@@ -196,7 +196,7 @@ def _init_influxdb_database():
         influxdb_client.create_database(INFLUXDB_DATABASE)
 
     influxdb_client.create_retention_policy('10_days', '10d', 1, INFLUXDB_DATABASE, default=True)
-    influxdb_client.create_retention_policy('30_days', '30d', 1, INFLUXDB_DATABASE, default=True)
+    influxdb_client.create_retention_policy('30_days', '30d', 1, INFLUXDB_DATABASE, default=False)
     influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
     
     influxdb_client.drop_continuous_query("mqtt_30_days","mqtt")
