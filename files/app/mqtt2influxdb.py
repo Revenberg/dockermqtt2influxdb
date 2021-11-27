@@ -169,7 +169,11 @@ def _parse_metric(data):
             return STATE_VALUES[data]
 
         # Last ditch effort, we got a string, let's try to cast it
-        return float(data)
+        LOG.debug(data)
+        try:
+            return float(data)
+        except ValueError:
+            return None
 
     # We were not able to extract anything, let's bubble it up.
     LOG.debug(f"Can't parse '{data}' to a number.")
