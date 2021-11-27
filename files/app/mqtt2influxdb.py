@@ -204,12 +204,12 @@ def _init_influxdb_database():
     influxdb_client.drop_continuous_query(INFLUXDB_TABEL + "_30_days", INFLUXDB_DATABASE)
     select_clause = 'SELECT mean(*) INTO "30_days"."' + INFLUXDB_TABEL + '" FROM "10_days"."' + INFLUXDB_TABEL + '" GROUP BY time(5m)'
     logging.debug(select_clause)
-
-    influxdb_client.create_continuous_query("reading_30_days", INFLUXDB_DATABASE, select_clause, INFLUXDB_DATABASE, 'EVERY 10s FOR 5m')
+    influxdb_client.create_continuous_query(INFLUXDB_TABEL +"_30_days", select_clause, INFLUXDB_DATABASE, 'EVERY 10s FOR 5m')
 
     influxdb_client.drop_continuous_query(INFLUXDB_TABEL + "_infinite", INFLUXDB_DATABASE)
     select_clause = 'SELECT mean(*) INTO "infinite"."' + INFLUXDB_TABEL + '" FROM "10_days"."' + INFLUXDB_TABEL + '" GROUP BY time(5m)'
-    influxdb_client.create_continuous_query('reading_infinite', select_clause, INFLUXDB_DATABASE, 'EVERY 360s FOR 60m')
+    logging.debug(select_clause)
+    influxdb_client.create_continuous_query(INFLUXDB_TABEL + '_infinite', select_clause, INFLUXDB_DATABASE, 'EVERY 360s FOR 60m')
 
     influxdb_client.switch_database(INFLUXDB_DATABASE)
     logging.debug('Connected to database %s' % INFLUXDB_DATABASE)
