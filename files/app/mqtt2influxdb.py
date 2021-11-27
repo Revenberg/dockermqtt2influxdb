@@ -27,7 +27,7 @@ INFLUXDB_PORT = int(os.getenv('INFLUX_PORT', "8086"))
 INFLUXDB_USER = os.getenv("INFLUXDB_USERNAME")
 INFLUXDB_PASSWORD = os.getenv("INFLUXDB_PASSWORD")
 INFLUXDB_DATABASE = os.getenv("INFLUXDB_DATABASE", 'mqtt')
-INFLUXDB_TABEL = os.getenv("INFLUXDB_DATABASE", 'reading')
+INFLUXDB_TABEL = os.getenv("INFLUXDB_TABEL", 'reading')
 
 LOGFORMAT = '%(asctime)-15s %(message)s'
 
@@ -201,13 +201,13 @@ def _init_influxdb_database():
     influxdb_client.create_retention_policy('30_days', '30d', 1, INFLUXDB_DATABASE, default=False)
     influxdb_client.create_retention_policy('infinite', 'INF', 1, INFLUXDB_DATABASE, default=False)
     
-    influxdb_client.drop_continuous_query("mqtt_30_days","mqtt")
-    select_clause = 'SELECT mean(*) INTO "mqtt.30_days" FROM "mqtt.10_days" GROUP BY time(5m)'
-    influxdb_client.create_continuous_query('mqtt_30_days', select_clause, INFLUXDB_DATABASE, 'EVERY 10s FOR 5m')
+    influxdb_client.drop_continuous_query(INFLUXDB_TABEL + "_30_days", INFLUXDB_DATABASE)
+    select_clause = 'SELECT mean(*) INTO "30_days"."' + INFLUXDB_TABEL + '" FROM "10_days"' + INFLUXDB_TABEL + '" GROUP BY time(5m)'
+    influxdb_client.create_continuous_query(INFLUXDB_TABEL + "_30_days", INFLUXDB_DATABASE, select_clause, INFLUXDB_DATABASE, 'EVERY 10s FOR 5m')
 
-    influxdb_client.drop_continuous_query("mqtt_infinite","mqtt")
-    select_clause = 'SELECT mean(*) INTO "mqtt.infinite" FROM "mqtt.10_days" GROUP BY time(60m)'
-    influxdb_client.create_continuous_query('mqtt_infinite', select_clause, INFLUXDB_DATABASE, 'EVERY 360s FOR 60m')
+    influxdb_client.drop_continuous_query(INFLUXDB_TABEL + "_infinite", INFLUXDB_DATABASE)
+    select_clause = 'SELECT mean(*) INTO "infinite"."' + INFLUXDB_TABEL + '" FROM "10_days"' + INFLUXDB_TABEL + '" GROUP BY time(5m)'
+    influxdb_client.create_continuous_query(INFLUXDB_TABEL + '_infinite', select_clause, INFLUXDB_DATABASE, 'EVERY 360s FOR 60m')
 
     influxdb_client.switch_database(INFLUXDB_DATABASE)
     logging.debug('Connected to database %s' % INFLUXDB_DATABASE)
